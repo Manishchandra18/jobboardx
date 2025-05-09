@@ -1,7 +1,17 @@
-
-import {AppBar,Avatar,Box,Button,Card,CardContent,Container,
-  Dialog,DialogContent,DialogTitle,IconButton,Stack,Toolbar,Typography
-}from '@mui/material';
+import { lazy, Suspense } from 'react';
+import {
+  AppBar,
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Container,
+  IconButton,
+  Stack,
+  Toolbar,
+  Typography,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchMyProfile } from '../../services/profileService';
@@ -9,18 +19,23 @@ import { fetchApplicantsByJobId } from '../../services/applicationService';
 import axiosInstance from '../../services/axiosInstance';
 import Grid from '@mui/material/GridLegacy';
 
+// Lazy-loaded components
+const Dialog = lazy(() => import('@mui/material/Dialog'));
+const DialogContent = lazy(() => import('@mui/material/DialogContent'));
+const DialogTitle = lazy(() => import('@mui/material/DialogTitle'));
+
 function EmployerDashboard() {
   const navigate = useNavigate();
-  const [profile, setProfile] = useState<any>(null);
+  const [setProfile] = useState<any>(null);
   const [showProfile, setShowProfile] = useState(false);
-  const [jobs, setJobs] = useState<any[]>([]);
+  const [, setJobs] = useState<any[]>([]);
   const [applicants, setApplicants] = useState<any[]>([]);
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     navigate('/');
   };
-
 
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
@@ -73,28 +88,31 @@ function EmployerDashboard() {
 
       <Container maxWidth="lg" sx={{ mt: 6 }}>
         <Typography variant="h4" fontWeight="bold" textAlign="center" mb={4}>
-          Employer Dashboard 
+          Employer Dashboard
         </Typography>
         <Typography variant="h5" fontWeight="bold" textAlign="center" mb={4}>
           Welcome, {user.name}!
         </Typography>
-        <Grid container spacing={3} >
-         <Grid item xs={12} md={4}>
-         <Card elevation={4}>
-    <CardContent>
-      <Typography variant="h6" fontWeight="bold" gutterBottom>
-        View Applicants
-      </Typography>
-      <Typography variant="body2" color="text.secondary" mb={2}>
-        View all applicants for your job postings.
-      </Typography>
-      <Button fullWidth variant="contained" onClick={() => navigate('/employer/applicants')}
-      >
-        View Applicants
-      </Button>
-    </CardContent>
-  </Card>
-</Grid>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={4}>
+            <Card elevation={4}>
+              <CardContent>
+                <Typography variant="h6" fontWeight="bold" gutterBottom>
+                  View Applicants
+                </Typography>
+                <Typography variant="body2" color="text.secondary" mb={2}>
+                  View all applicants for your job postings.
+                </Typography>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={() => navigate('/employer/applicants')}
+                >
+                  View Applicants
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
 
           {/* Main Dashboard Actions */}
           <Grid item xs={12} md={8}>
@@ -108,7 +126,12 @@ function EmployerDashboard() {
                     <Typography variant="body2" color="text.secondary">
                       Create a new job listing.
                     </Typography>
-                    <Button fullWidth variant="contained" sx={{ mt: 2 }} onClick={() => navigate('/employer/post-job')}>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      sx={{ mt: 2 }}
+                      onClick={() => navigate('/employer/post-job')}
+                    >
                       Post Job
                     </Button>
                   </CardContent>
@@ -123,7 +146,12 @@ function EmployerDashboard() {
                     <Typography variant="body2" color="text.secondary">
                       Edit or delete your job postings.
                     </Typography>
-                    <Button fullWidth variant="contained" sx={{ mt: 2 }} onClick={() => navigate('/employer/manage-jobs')}>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      sx={{ mt: 2 }}
+                      onClick={() => navigate('/employer/manage-jobs')}
+                    >
                       Manage Jobs
                     </Button>
                   </CardContent>
@@ -141,14 +169,27 @@ function EmployerDashboard() {
                 </Typography>
                 <Stack spacing={2}>
                   {applicants.length === 0 ? (
-                    <Typography variant="body2" color="text.secondary">No applicants yet.</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      No applicants yet.
+                    </Typography>
                   ) : (
                     applicants.slice(0, 5).map((app, index) => (
-                      <Box key={index} sx={{ border: '1px solid #ddd', p: 2, borderRadius: 2 }}>
-                        <Typography fontWeight="bold">{app.applicant?.name || 'Unknown'}</Typography>
-                        <Typography variant="body2" color="text.secondary">{app.applicant?.email}</Typography>
-                        <Typography variant="body2">Applied for: {app.job?.title}</Typography>
-                        <Typography variant="caption" color="text.secondary">Status: {app.status}</Typography>
+                      <Box
+                        key={index}
+                        sx={{ border: '1px solid #ddd', p: 2, borderRadius: 2 }}
+                      >
+                        <Typography fontWeight="bold">
+                          {app.applicant?.name || 'Unknown'}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {app.applicant?.email}
+                        </Typography>
+                        <Typography variant="body2">
+                          Applied for: {app.job?.title}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Status: {app.status}
+                        </Typography>
                       </Box>
                     ))
                   )}
@@ -159,20 +200,35 @@ function EmployerDashboard() {
         </Grid>
       </Container>
 
-      <Dialog open={showProfile} onClose={() => setShowProfile(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>My Profile</DialogTitle>
-        <DialogContent dividers>
-          <Stack spacing={2}>
-            <Typography><strong>Name:</strong> {user.name}</Typography>
-            <Typography><strong>Email:</strong> {user.email}</Typography>
-            <Typography><strong>Role:</strong> {user.role}</Typography>
-          </Stack>
-        </DialogContent>
-      </Dialog>
+      {/* Lazy-loaded Dialog */}
+      <Suspense fallback={<div>Loading Profile...</div>}>
+        <Dialog open={showProfile} onClose={() => setShowProfile(false)} maxWidth="sm" fullWidth>
+          <DialogTitle>My Profile</DialogTitle>
+          <DialogContent dividers>
+            <Stack spacing={2}>
+              <Typography>
+                <strong>Name:</strong> {user.name}
+              </Typography>
+              <Typography>
+                <strong>Email:</strong> {user.email}
+              </Typography>
+              <Typography>
+                <strong>Role:</strong> {user.role}
+              </Typography>
+            </Stack>
+          </DialogContent>
+        </Dialog>
+      </Suspense>
 
       <Box
         component="footer"
-        sx={{ mt: 6, py: 3, textAlign: 'center', backgroundColor: '#eee', borderTop: '1px solid #ccc' }}
+        sx={{
+          mt: 6,
+          py: 3,
+          textAlign: 'center',
+          backgroundColor: '#eee',
+          borderTop: '1px solid #ccc',
+        }}
       >
         <Typography variant="body2" color="text.secondary">
           © {new Date().getFullYear()} JobBoardX • Empowering Recruiters Worldwide
