@@ -22,7 +22,7 @@ app.use('/api/applications', require('./routes/applicationRoutes'));
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT} ✨`));
 
-import cors from 'cors';
+
 
 const allowedOrigins = [process.env.CORS_ORIGIN];
 
