@@ -14,12 +14,10 @@ connectDB();
 
 const app = express();
 
-// ✅ CORS setup
-const allowedOrigins = [process.env.CORS_ORIGIN || '*'];
-
+// ✅ Before any routes
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || process.env.CORS_ORIGIN === origin) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -30,8 +28,9 @@ app.use(cors({
   credentials: true,
 }));
 
-// ✅ Preflight support
+// ✅ This MUST be before any routes
 app.options('*', cors());
+
 
 // ✅ JSON parsing
 app.use(json());
