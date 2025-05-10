@@ -1,6 +1,6 @@
 import express, { json } from 'express';
 import { config } from 'dotenv';
-import connectDB from './config/db';
+import connectDB from './config/db.js';
 import cors from 'cors';
 
 config();
