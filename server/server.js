@@ -1,9 +1,9 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const connectDB = require('./config/db');
-const cors = require('cors');
+import express, { json } from 'express';
+import { config } from 'dotenv';
+import connectDB from './config/db';
+import cors from 'cors';
 
-dotenv.config();
+config();
 connectDB();
 
 const app = express();
@@ -11,7 +11,7 @@ const app = express();
 // CORS handling
 app.use(cors());
 
-app.use(express.json());
+app.use(json());
 
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
@@ -30,12 +30,8 @@ app.get('/', (req, res) => {
 const allowedOrigins = [process.env.CORS_ORIGIN];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-}));
+    origin: process.env.CORS_ORIGIN || '*', // ⚠️ tighten this in prod
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+  }));
