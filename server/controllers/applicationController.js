@@ -1,10 +1,9 @@
-const Application = require('../models/Application');
-const Job = require('../models/Job');
-const User = require('../models/User');
-const sendEmail = require('../utils/sendEmail');
+import Application from '../models/Application.js';
+import Job from '../models/Job.js';
+import sendEmail from '../utils/sendEmail.js';
 
 // Job Seeker - Apply to a Job
-exports.applyToJob = async (req, res) => {
+export const applyToJob = async (req, res) => {
   try {
     const { jobId, resumeLink, coverLetter } = req.body;
 
@@ -61,7 +60,7 @@ Please log into JobBoardX to review this application.
 };
 
 // Seeker - View My Applications
-exports.getMyApplications = async (req, res) => {
+export const getMyApplications = async (req, res) => {
   try {
     const applications = await Application.find({ applicant: req.user._id }).populate('job');
 
@@ -72,7 +71,7 @@ exports.getMyApplications = async (req, res) => {
 };
 
 // Employer - View Applicants for a Job
-exports.getApplicantsByJobId = async (req, res) => {
+export const getApplicantsByJobId = async (req, res) => {
   try {
     const applications = await Application.find({ job: req.params.jobId }).populate('applicant', 'name email')
     .populate('job', 'title');
@@ -83,7 +82,7 @@ exports.getApplicantsByJobId = async (req, res) => {
   }
 };
 //  Withdraw Application
-exports.withdrawApplication = async (req, res) => {
+export const withdrawApplication = async (req, res) => {
   try {
     const application = await Application.findById(req.params.id);
 
@@ -104,7 +103,7 @@ exports.withdrawApplication = async (req, res) => {
     res.status(500).json({ error: 'Server error while withdrawing application' });
   }
 };
-exports.updateApplicationStatus = async (req, res) => {
+export const updateApplicationStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
@@ -130,7 +129,7 @@ exports.updateApplicationStatus = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
-exports.getAllApplicantsForEmployer = async (req, res) => {
+export const getAllApplicantsForEmployer = async (req, res) => {
   try {
     const employerId = req.user._id;
     console.log('👤 Employer ID:', employerId);

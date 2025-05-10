@@ -1,7 +1,7 @@
-const Job = require('../models/Job');
+import Job from '../models/Job.js';
 
 // Create Job 
-exports.createJob = async (req, res) => {
+export const createJob = async (req, res) => {
   try {
     const { title, company, location, role, description, salary } = req.body;
 
@@ -23,7 +23,7 @@ exports.createJob = async (req, res) => {
 };
 
 // Get All Jobs
-exports.getAllJobs = async (req, res) => {
+export const getAllJobs = async (req, res) => {
     try {
       const { search, location, role, minSalary, maxSalary, page = 1, limit = 10 } = req.query;
   
@@ -86,7 +86,7 @@ exports.getAllJobs = async (req, res) => {
   };
   
 // Get Single Job by ID
-exports.getJobById = async (req, res) => {
+export const getJobById = async (req, res) => {
   try {
     const job = await Job.findById(req.params.id);
     if (!job) return res.status(404).json({ error: 'Job not found' });
@@ -96,7 +96,7 @@ exports.getJobById = async (req, res) => {
   }
 };
 // Get Jobs posted by Current Employer
-exports.getMyJobs = async (req, res) => {
+export const getMyJobs = async (req, res) => {
   
 
   try {
@@ -111,7 +111,7 @@ exports.getMyJobs = async (req, res) => {
 };
 
 // Update Job (Employer Only)
-exports.updateJob = async (req, res) => {
+export const updateJob = async (req, res) => {
   try {
     const job = await Job.findOneAndUpdate(
       { _id: req.params.id, createdBy: req.user._id },
@@ -128,7 +128,7 @@ exports.updateJob = async (req, res) => {
 };
 
 // Delete Job (Employer Only)
-exports.deleteJob = async (req, res) => {
+export const deleteJob = async (req, res) => {
   try {
     const job = await Job.findOneAndDelete({
       _id: req.params.id,

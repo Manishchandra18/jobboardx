@@ -1,7 +1,7 @@
-const User = require('../models/User');
-const mongoose = require('mongoose');
+import User from '../models/User.js';
+import mongoose from 'mongoose';
 
-exports.updateProfile = async (req, res) => {
+export const updateProfile = async (req, res) => {
   try {
     console.log('🔐 Authenticated user:', req.user);
     console.log('📡 Mongoose connection state:', mongoose.connection.readyState);
@@ -47,6 +47,6 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
-exports.getProfile = async (req, res) => {
+export const getProfile = async (req, res) => {
   res.json(req.user);
 };
