@@ -1,11 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { getProfile, updateProfile } from '../controllers/profileController.js';
+import { protect, requireRole } from '../middlewares/authMiddleware.js';
+
 const router = express.Router();
-
-// Import controllers
-const { getProfile, updateProfile } = require('../controllers/profileController');
-
-// Import middlewares
-const { protect, requireRole } = require('../middlewares/authMiddleware');
 
 // @route   GET /api/profile/me
 // @desc    Get current user's profile
@@ -17,4 +14,4 @@ router.get('/me', protect, getProfile);
 // @access  Private (Job Seeker only)
 router.put('/', protect, requireRole('seeker'), updateProfile);
 
-module.exports = router;
+export default router;

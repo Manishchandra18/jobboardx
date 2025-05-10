@@ -1,26 +1,25 @@
-const express = require('express');
-const router = express.Router();
-const {
+import express from 'express';
+import {
   createJob,
   getAllJobs,
   getJobById,
   updateJob,
   deleteJob,
-  getMyJobs
-} = require('../controllers/jobController');
+  getMyJobs,
+} from '../controllers/jobController.js';
+import { protect, requireRole } from '../middlewares/authMiddleware.js';
 
-const { protect, requireRole } = require('../middlewares/authMiddleware');
+const router = express.Router();
 
 // Public Routes
 router.get('/', getAllJobs);
 router.get('/my', protect, requireRole('employer'), getMyJobs);
 router.get('/:id', getJobById);
- 
+
 // Employer-only Routes
 router.post('/', protect, requireRole('employer'), createJob);
 router.put('/:id', protect, requireRole('employer'), updateJob);
 router.delete('/:id', protect, requireRole('employer'), deleteJob);
 router.get('/my', protect, requireRole('employer'), getMyJobs);
 
-
-module.exports = router;
+export default router;
