@@ -31,7 +31,8 @@ app.use(cors({
 }));
 
 // ✅ This MUST be before any routes
-app.options('*', cors());
+app.options('*', cors(corsOptions));
+
 
 
 // ✅ JSON parsing
