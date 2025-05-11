@@ -14,44 +14,40 @@ connectDB();
 
 const app = express();
 
-// ✅ Read allowed origins from .env
 const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [];
 
-// ✅ Define consistent CORS options
-const corsOptions = {
+// ✅ Before any routes
+app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.error('❌ CORS blocked:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
-};
+}));
 
-// ✅ Apply CORS middleware before all routes
-app.use(cors(corsOptions));
+// ✅ This MUST be before any routes
+app.options('*', cors());
 
-// ✅ Handle preflight OPTIONS requests with the same options
-app.options('*', cors(corsOptions));
 
-// ✅ Parse incoming JSON
+// ✅ JSON parsing
 app.use(json());
 
-// ✅ Health check route
-app.get('/', (req, res) => {
+// ✅ Health check
+app.get('/api', (req, res) => {
   res.json({ status: 'OK', message: 'JobBoardX API is running ✨' });
 });
 
-// ✅ Main API routes
+// ✅ Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/applications', applicationRoutes);
 
-// ✅ Start server
+// ✅ Server start
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT} ✨`));
