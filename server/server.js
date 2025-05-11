@@ -31,6 +31,7 @@ app.use(cors({
 }));
 
 // ✅ This MUST be before any routes
+app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
 
