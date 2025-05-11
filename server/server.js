@@ -14,10 +14,12 @@ connectDB();
 
 const app = express();
 
+const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [];
+
 // ✅ Before any routes
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || process.env.CORS_ORIGIN === origin) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -47,5 +49,5 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/applications', applicationRoutes);
 
 // ✅ Server start
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT} ✨`));
