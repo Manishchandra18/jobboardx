@@ -17,18 +17,20 @@ const app = express();
 const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [];
 
 // ✅ Before any routes
-app.use(cors({
+const corsOptions = {
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.error('❌ CORS blocked:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
-}));
+};
+
 
 // ✅ This MUST be before any routes
 app.use(cors(corsOptions));
