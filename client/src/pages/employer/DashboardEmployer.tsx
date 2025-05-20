@@ -26,9 +26,11 @@ const DialogTitle = lazy(() => import('@mui/material/DialogTitle'));
 
 function EmployerDashboard() {
   const navigate = useNavigate();
-  const [setProfile] = useState<any>(null);
+  const [profile,setProfile] = useState<any>(null);
+  console.log('profile', profile);
   const [showProfile, setShowProfile] = useState(false);
-  const [, setJobs] = useState<any[]>([]);
+  const [jobs, setJobs] = useState<any[]>([]);
+  console.log('jobs', jobs);
   const [applicants, setApplicants] = useState<any[]>([]);
 
   const handleLogout = () => {
